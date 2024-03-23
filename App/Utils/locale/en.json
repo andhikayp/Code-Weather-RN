@@ -1,0 +1,12 @@
+{
+  "Header-address": "Jalan Kutai II, RW 06, Darmo, Wonokromo, ",
+  "Home-temperature-feels-like": "Feels like {{temperature}}",
+  "Home-precipitation-hour": "No precipitation within an hour",
+  "Home-information-wind": "Wind: {{value}}m/s {{compassDirection}}",
+  "Home-information-humidity": "Humidity: {{value}}%",
+  "Home-information-uv-index": "UV index: {{value}}",
+  "Home-information-pressure": "Pressure: {{value}}hPa",
+  "Home-information-visibility": "Visibility: {{value}}km",
+  "Home-information-dew-point": "Dew point: {{value}}",
+  "Util-temperature": "{{temperature}} °C"
+}
