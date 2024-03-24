@@ -256,8 +256,8 @@ const Home = () => {
 
   const renderForecastDetails = () => {
     const handleOnScroll = event => {
-      const {x} = event.nativeEvent.contentOffset;
-      const index = Math.round(x / screenWidth);
+      const positionX = event.nativeEvent.contentOffset.x;
+      const index = Math.round(positionX / screenWidth);
       setDateTime(index);
     };
 
@@ -265,7 +265,8 @@ const Home = () => {
       <ScrollView
         ref={scrollViewRef}
         showsHorizontalScrollIndicator={false}
-        onScrollEndDrag={handleOnScroll}
+        onMomentumScrollBegin={handleOnScroll}
+        onMomentumScrollEnd={handleOnScroll}
         scrollEventThrottle={8}
         style={styles.scrollContainer}
         onLayout={() => {
