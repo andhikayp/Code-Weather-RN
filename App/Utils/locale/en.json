@@ -24,5 +24,7 @@
   "Home-value-sunrise": "{{value}}",
   "Home-label-sunset": "Sunset",
   "Home-value-sunset": "{{value}}",
+  "Home-loading": "Fetching the weather...",
+  "Home-apps": "OpenWeather",
   "Util-temperature": "{{temperature}} °C"
 }
