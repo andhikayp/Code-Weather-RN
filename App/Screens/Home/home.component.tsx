@@ -156,6 +156,7 @@ const Home = props => {
     return (
       <View style={styles.paddingSide} key={key}>
         <InlineTextView
+          screenName={screenName}
           onPress={onPress}
           label={label}
           renderRightItem={renderRightItem}
@@ -248,6 +249,7 @@ const Home = props => {
 
       return (
         <InlineTextView
+          screenName={screenName}
           containerStyle={{paddingVertical: 16}}
           label={i18n.t(`${screenName}-label-${label}`)}
           isDisabled={true}

@@ -5,8 +5,10 @@ import styles from './information.component.styles';
 import config from './information.config';
 import i18n from '../../../Utils/locale/i18n';
 import {Images} from '../../../Themes';
+import utils from '../../../Utils';
 
 const {mappingInformation} = config;
+const {testProps} = utils;
 
 const Information = props => {
   const {screenName, currentWeather} = props;
@@ -21,12 +23,15 @@ const Information = props => {
         style={styles.arrowIcon}
         source={Images.navigationArrow}
         transform={[{rotate: `${rotate}deg`}]}
+        {...testProps(`${screenName}_arrow_image`)}
       />
     );
 
     return (
       <View key={index} style={styles.informationContainer}>
-        <Text style={styles.informationItem}>
+        <Text
+          style={styles.informationItem}
+          {...testProps(`${screenName}_${key}_label`)}>
           {i18n.t(`${screenName}-information-${key}`, {
             value,
             compassDirection,

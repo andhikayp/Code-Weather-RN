@@ -6,10 +6,10 @@ import utils from '../../../Utils';
 import {Separator} from '../../../Components/Separator';
 import {Images} from '../../../Themes';
 
-const {formatTime, formatTemperature, formatDate} = utils;
+const {formatTime, formatTemperature, formatDate, testProps} = utils;
 
 const HourlyWeather = props => {
-  const {hourlyWeathers} = props;
+  const {hourlyWeathers, screenName} = props;
 
   const renderWeatherItem = (hourlyWeather, key) => {
     const {dt, icon, temp, isTemperature} = hourlyWeather;
@@ -17,17 +17,22 @@ const HourlyWeather = props => {
     const isDateChanged = time === '00:00';
     const {date, month} = formatDate(dt);
 
-    const renderSeparator = () => <Separator width={1} color="lightgray" />;
+    const renderSeparator = () => <Separator screenName={screenName} />;
 
     const renderTemperatureIcon = () => (
       <Image
         style={styles.icon}
         src={`https://openweathermap.org/img/wn/${icon}.png`}
+        {...testProps(`${screenName}_image_temperature`)}
       />
     );
 
     const renderSunIcon = () => (
-      <Image style={styles.icon} source={Images[icon]} />
+      <Image
+        style={styles.icon}
+        source={Images[icon]}
+        {...testProps(`${screenName}_sun_temperature`)}
+      />
     );
 
     return (

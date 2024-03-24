@@ -87,7 +87,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   dateItem: {
-    padding: 8,
+    padding: 4,
     alignItems: 'center',
   },
   date: {
