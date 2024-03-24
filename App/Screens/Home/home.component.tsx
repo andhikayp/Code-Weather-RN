@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -8,26 +8,32 @@ import {
   View,
   Dimensions,
 } from 'react-native';
+import {connect} from 'react-redux';
 
+import {getWeatherData} from '../../Redux/actions/counterActions';
 import i18n from '../../Utils/locale/i18n';
 import styles from './home.component.styles';
 import {Images, useTheme} from '../../Themes';
-import {weatherDetail} from './Home.fixtures';
 import utils from '../../Utils';
 import {Information} from './Information';
 import {HourlyWeather} from './HourlyWeather';
 import config from './Home.config';
 import {Separator} from '../../Components/Separator';
 import {InlineTextView} from '../../Components/InlineTextView';
+import {Loading} from './Loading';
 
 const {capitalize, formatTemperature, formatDate, roundNumber} = utils;
 const {mappingHourlyWeather, mappingDailyForecast} = config;
 
 const screenName = 'Home';
 
-const Home = () => {
-  const {current, hourly, daily} = weatherDetail;
-  const {weather, temp, feels_like} = current;
+const Home = props => {
+  const {getWeather, weatherDetail, isLoading} = props;
+
+  useEffect(() => {
+    getWeather();
+  }, []);
+
   const {theme} = useTheme();
   const scrollViewRef = useRef(null);
   const [isShowDetail, setIsShowDetail] = useState(false);
@@ -51,6 +57,7 @@ const Home = () => {
   );
 
   const renderLatestWeatherInformation = () => {
+    const {weather, temp, feels_like} = weatherDetail.current;
     const {icon, description, main} = weather[0];
 
     return (
@@ -94,10 +101,16 @@ const Home = () => {
   };
 
   const renderDetailInformation = () => {
-    return <Information screenName={screenName} currentWeather={current} />;
+    return (
+      <Information
+        screenName={screenName}
+        currentWeather={weatherDetail.current}
+      />
+    );
   };
 
   const renderForecastHourlyWeather = () => {
+    const {hourly, daily, current} = weatherDetail;
     const mappedHourly = mappingHourlyWeather(hourly, daily, current);
 
     return (
@@ -152,7 +165,7 @@ const Home = () => {
   };
 
   const renderForecastDailyWeather = () => {
-    return <View>{daily.map(renderDailyWeather)}</View>;
+    return <View>{weatherDetail.daily.map(renderDailyWeather)}</View>;
   };
 
   const renderDate = () => {
@@ -179,7 +192,9 @@ const Home = () => {
     };
 
     return (
-      <View style={styles.dateContainer}>{daily.map(renderDateItem)}</View>
+      <View style={styles.dateContainer}>
+        {weatherDetail.daily.map(renderDateItem)}
+      </View>
     );
   };
 
@@ -274,7 +289,7 @@ const Home = () => {
         }}
         horizontal
         pagingEnabled={true}>
-        {daily.map(renderForecastDetail)}
+        {weatherDetail.daily.map(renderForecastDetail)}
       </ScrollView>
     );
   };
@@ -298,7 +313,9 @@ const Home = () => {
     );
   };
 
-  return (
+  const renderLoading = () => <Loading screenName={screenName} />;
+
+  const renderContent = () => (
     <SafeAreaView
       style={{
         backgroundColor: theme.primary,
@@ -317,6 +334,15 @@ const Home = () => {
       </ScrollView>
     </SafeAreaView>
   );
+
+  return isLoading ? renderLoading() : renderContent();
 };
 
-export default Home;
+const mapStateToProps = state => ({
+  weatherDetail: state.counter.dataWeather,
+  isLoading: state.counter.isLoading,
+});
+
+export default connect(mapStateToProps, {
+  getWeather: getWeatherData,
+})(Home);
