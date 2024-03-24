@@ -10,7 +10,8 @@ const formatDate = (timestamp: string) => {
   const date = moment.unix(timestamp);
 
   return {
-    date: date.format('MMM DD'),
+    date: date.format('DD'),
+    month: date.format('MMM'),
     day: date.format('ddd'),
   };
 };

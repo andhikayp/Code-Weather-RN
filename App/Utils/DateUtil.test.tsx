@@ -18,7 +18,8 @@ describe('DateUtil', () => {
     it('should format date', () => {
       const input = '1711095261';
       const expectedResult = {
-        date: 'Mar 22',
+        date: '22',
+        month: 'Mar',
         day: 'Fri',
       };
 

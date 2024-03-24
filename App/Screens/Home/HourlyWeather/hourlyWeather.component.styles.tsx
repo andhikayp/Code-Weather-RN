@@ -4,7 +4,6 @@ import {Fonts} from '../../../Themes';
 
 export default StyleSheet.create({
   container: {
-    flexDirection: 'row',
     marginVertical: 10,
     paddingBottom: 10,
   },
@@ -24,5 +23,8 @@ export default StyleSheet.create({
   },
   temperature: {
     fontSize: Fonts.size.h5,
+  },
+  weatherLayout: {
+    flexDirection: 'row',
   },
 });

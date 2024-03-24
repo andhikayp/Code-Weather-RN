@@ -3,7 +3,7 @@ import {View, Text, Image, ScrollView} from 'react-native';
 
 import styles from './hourlyWeather.component.styles';
 import utils from '../../../Utils';
-import VerticalSeparator from '../../../Components/VerticalSeparator/verticalSeparator.component';
+import {Separator} from '../../../Components/Separator';
 import {Images} from '../../../Themes';
 
 const {formatTime, formatTemperature, formatDate} = utils;
@@ -15,11 +15,9 @@ const HourlyWeather = props => {
     const {dt, icon, temp, isTemperature} = hourlyWeather;
     const time = formatTime(dt);
     const isDateChanged = time === '00:00';
-    const {date} = formatDate(dt);
+    const {date, month} = formatDate(dt);
 
-    const renderVerticalSeparator = () => (
-      <VerticalSeparator width={1} color="lightgray" />
-    );
+    const renderSeparator = () => <Separator width={1} color="lightgray" />;
 
     const renderTemperatureIcon = () => (
       <Image
@@ -33,21 +31,26 @@ const HourlyWeather = props => {
     );
 
     return (
-      <>
-        {isDateChanged && renderVerticalSeparator()}
-        <View style={styles.weatherContainer} key={key}>
-          <Text style={styles.time}>{isDateChanged ? date : time}</Text>
+      <View key={key} style={styles.weatherLayout}>
+        {isDateChanged && renderSeparator()}
+        <View style={styles.weatherContainer}>
+          <Text style={styles.time}>
+            {isDateChanged ? `${month} ${date}` : time}
+          </Text>
           {isTemperature ? renderTemperatureIcon() : renderSunIcon()}
           <Text style={styles.temperature}>
             {isTemperature ? formatTemperature(temp, true) : temp}
           </Text>
         </View>
-      </>
+      </View>
     );
   };
 
   return (
-    <ScrollView style={styles.container} horizontal>
+    <ScrollView
+      style={styles.container}
+      alwaysBounceHorizontal={false}
+      horizontal>
       {hourlyWeathers.map(renderWeatherItem)}
     </ScrollView>
   );
