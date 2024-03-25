@@ -21,6 +21,7 @@ import config from './Home.config';
 import {Separator} from '../../Components/Separator';
 import {InlineTextView} from '../../Components/InlineTextView';
 import {Loading} from './Loading';
+import {Header} from './Header';
 
 const {capitalize, formatTemperature, formatDate, roundNumber} = utils;
 const {mappingHourlyWeather, mappingDailyForecast} = config;
@@ -40,21 +41,7 @@ const Home = props => {
   const [dateTime, setDateTime] = useState(null);
   const screenWidth = Dimensions.get('window').width;
 
-  const renderHeader = () => (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <Image source={Images.search} style={styles.icon} />
-        <Text
-          style={[styles.inputSearchText, {color: theme.secondary}]}
-          numberOfLines={1}>
-          {i18n.t('Header-address')}
-        </Text>
-      </View>
-      <View>
-        <Image source={Images.setting} style={styles.icon} />
-      </View>
-    </View>
-  );
+  const renderHeader = () => <Header screenName={screenName} />;
 
   const renderLatestWeatherInformation = () => {
     const {weather, temp, feels_like} = weatherDetail.current;
@@ -110,8 +97,8 @@ const Home = props => {
   };
 
   const renderForecastHourlyWeather = () => {
-    const {hourly, daily, current} = weatherDetail;
-    const mappedHourly = mappingHourlyWeather(hourly, daily, current);
+    const {hourly, daily} = weatherDetail;
+    const mappedHourly = mappingHourlyWeather(hourly, daily);
 
     return (
       <HourlyWeather hourlyWeathers={mappedHourly} screenName={screenName} />

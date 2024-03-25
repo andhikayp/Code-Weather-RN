@@ -1,8 +1,6 @@
-import moment from 'moment';
-
 import utils from '../../Utils';
 
-const {formatTime, roundNumber, getCompassDirection} = utils;
+const {formatTime, roundNumber, getCompassDirection, formatDate} = utils;
 
 const mappingHourly = hourly => {
   return hourly.map(hourlyWeather => {
@@ -18,14 +16,18 @@ const mappingHourly = hourly => {
   });
 };
 
-const mappingHourlyWeather = (hourly: [], daily: [], current) => {
+const mappingHourlyWeather = (hourly: [], daily: []) => {
   let additionalWeather = [];
-  const lastValueHourly = hourly.slice(-1)[0];
-
-  daily.map(item => {
-    const dailyWeather = hourly.find(weather => weather.dt === item.dt);
-    if (dailyWeather) {
-      if (item.sunrise < lastValueHourly.dt) {
+  const lastValueHourly = hourly[hourly.length - 1];
+  const firstValueHourly = hourly[0];
+  const {date} = formatDate(lastValueHourly.dt);
+  daily.forEach(item => {
+    const {date: itemDate} = formatDate(item.dt);
+    if (itemDate <= date) {
+      if (
+        item.sunrise < lastValueHourly.dt &&
+        item.sunrise > firstValueHourly.dt
+      ) {
         additionalWeather.push({
           dt: item.sunrise,
           icon: 'sunrise',
@@ -33,7 +35,10 @@ const mappingHourlyWeather = (hourly: [], daily: [], current) => {
           isTemperature: false,
         });
       }
-      if (item.sunset < lastValueHourly.dt) {
+      if (
+        item.sunset < lastValueHourly.dt &&
+        item.sunset > firstValueHourly.dt
+      ) {
         additionalWeather.push({
           dt: item.sunset,
           icon: 'sunset',
@@ -43,22 +48,6 @@ const mappingHourlyWeather = (hourly: [], daily: [], current) => {
       }
     }
   });
-  if (current.sunrise > moment().unix()) {
-    additionalWeather.push({
-      dt: current.sunrise,
-      icon: 'sunrise',
-      temp: 'Sunrise',
-      isTemperature: false,
-    });
-  }
-  if (current.sunset > moment().unix()) {
-    additionalWeather.push({
-      dt: current.sunset,
-      icon: 'sunset',
-      temp: 'Sunset',
-      isTemperature: false,
-    });
-  }
   const mappedHourly = mappingHourly(hourly);
 
   return mappedHourly.concat(additionalWeather).sort((a, b) => {
