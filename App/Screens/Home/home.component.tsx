@@ -22,6 +22,7 @@ import {Separator} from '../../Components/Separator';
 import {InlineTextView} from '../../Components/InlineTextView';
 import {Loading} from './Loading';
 import {Header} from './Header';
+import {CurrentWeather} from './CurrentWeather';
 
 const {capitalize, formatTemperature, formatDate, roundNumber} = utils;
 const {mappingHourlyWeather, mappingDailyForecast} = config;
@@ -41,39 +42,20 @@ const Home = props => {
   const [dateTime, setDateTime] = useState(null);
   const screenWidth = Dimensions.get('window').width;
 
+  const handleScrollToPosition = (x, y, animated = true) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({x, y, animated});
+    }
+  };
+
   const renderHeader = () => <Header screenName={screenName} />;
 
-  const renderLatestWeatherInformation = () => {
-    const {weather, temp, feels_like} = weatherDetail.current;
-    const {icon, description, main} = weather[0];
-
+  const renderCurrentWeatherInformation = () => {
     return (
-      <View style={styles.mainContainer}>
-        <View style={styles.rowContainer}>
-          <View>
-            <Image
-              src={`https://openweathermap.org/img/wn/${icon}.png`}
-              style={styles.iconWeather}
-            />
-          </View>
-          <View style={styles.columnContainer}>
-            <Text style={styles.weatherDescription}>
-              {capitalize(description)}
-            </Text>
-            <Text style={styles.mainWeatherDescription}>{main}</Text>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.temperature}>{formatTemperature(temp)}</Text>
-        </View>
-        <View>
-          <Text style={styles.temperatureFeels}>
-            {i18n.t(`${screenName}-temperature-feels-like`, {
-              temperature: formatTemperature(feels_like),
-            })}
-          </Text>
-        </View>
-      </View>
+      <CurrentWeather
+        screenName={screenName}
+        currentWeather={weatherDetail.current}
+      />
     );
   };
 
@@ -186,12 +168,6 @@ const Home = props => {
     );
   };
 
-  const handleScrollToPosition = (x, y, animated = true) => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({x, y, animated});
-    }
-  };
-
   const renderForecastDetail = dailyItem => {
     const {dt} = dailyItem;
     const {description, main} = dailyItem.weather[0];
@@ -237,7 +213,7 @@ const Home = props => {
       return (
         <InlineTextView
           screenName={screenName}
-          containerStyle={{paddingVertical: 16}}
+          containerStyle={{paddingVertical: 18}}
           label={i18n.t(`${screenName}-label-${label}`)}
           isDisabled={true}
           key={key}
@@ -314,7 +290,7 @@ const Home = props => {
       <ScrollView
         alwaysBounceVertical={false}
         showsVerticalScrollIndicator={false}>
-        {renderLatestWeatherInformation()}
+        {renderCurrentWeatherInformation()}
         {renderPrecipitationInformation()}
         {renderDetailInformation()}
         {renderForecastHourlyWeather()}
